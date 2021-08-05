@@ -19,12 +19,12 @@ void create(int data)
     }
     else
     {
-        Node *t = head;
-        while (t->next != NULL)
+        Node *temp = head;
+        while (temp->next != NULL)
         {
-            t = t->next;
+            temp = temp->next;
         }
-        t->next = new;
+        temp->next = new;
     }
 }
 
@@ -41,26 +41,26 @@ void insert_at_pos(int data, int pos)
     int i = 0;
     Node *new = (Node *)malloc(sizeof(Node));
     new->data = data;
-    Node *t, *t1 = head;
+    Node *temp, *temp1 = head;
     while (i < pos)
     {
-        t1 = t;
-        t = t->next;
+        temp1 = temp;
+        temp = temp->next;
     }
-    t1->next = new;
-    new->next = t;
+    temp1->next = new;
+    new->next = temp;
 }
 void insert_at_end(int data)
 {
     Node *new = (Node *)malloc(sizeof(Node));
     new->data = data;
-    Node *t;
-    t = head;
-    while (t->next != NULL)
+    Node *temp;
+    temp = head;
+    while (temp->next != NULL)
     {
-        t = t->next;
+        temp = temp->next;
     }
-    t->next = new;
+    temp->next = new;
     new->next = NULL;
 }
 
@@ -72,30 +72,30 @@ void display()
     }
     else
     {
-        Node *t = head;
-        while (t != NULL)
+        Node *temp = head;
+        while (temp != NULL)
         {
-            printf("%d ", t->data);
-            t = t->next;
+            printf("%d ", temp->data);
+            temp = temp->next;
         }
     }
 }
 
 void reverse_list()
 {
-    Node *t1, *t2, *t3;
-    t1 = head;
-    t2 = t1->next;
-    t3 = t2->next;
-    t1->next = NULL;
-    while (t2 != NULL)
+    Node *temp1, *temp2, *t3;
+    temp1 = head;
+    temp2 = temp1->next;
+    t3 = temp2->next;
+    temp1->next = NULL;
+    while (temp2 != NULL)
     {
-        t3 = t2->next;
-        t2->next = t1;
-        t1 = t2;
-        t2 = t3;
+        t3 = temp2->next;
+        temp2->next = temp1;
+        temp1 = temp2;
+        temp2 = t3;
     }
-    head = t1;
+    head = temp1;
 }
 
 void delete_begin()
@@ -107,34 +107,37 @@ void delete_begin()
     else
     {
         printf("%d is deleted", head->data);
-        Node *t = head;
+        Node *temp = head;
         head = head->next;
-        free(t);
+        free(temp);
     }
 }
 
+
 void delete_at_position(int pos)
 {
-    Node *t = head, *t1;
+    Node *temp = head, *temp1;
     int i = 0;
-    while (i < pos && t!= NULL)
+    while (i < pos && temp!= NULL)
     {
-        t1 = t;
-        t = t->next;
+        temp1 = temp;
+        temp = temp->next;
         i++;
     }
 
-    if (t == NULL)
+    if (temp == NULL)
     {
         printf("Not a valid position");
     }
     else
     {
-        t1->next = t->next;
-        printf("%d deleted", t1->data);
-        free(t);
+        temp1->next = temp->next;
+        printf("%d deleted", temp1->data);
+        free(temp);
     }
 }
+
+
 
 void main()
 {

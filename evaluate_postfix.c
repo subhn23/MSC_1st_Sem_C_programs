@@ -316,5 +316,5 @@ void evalute(char infix[])
             printf("Enter only Integer Equation....");
         }
     }
-    printf("%d\t", result);
+    printf("%d\temp", result);
 }

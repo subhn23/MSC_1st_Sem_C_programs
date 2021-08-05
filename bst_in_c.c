@@ -1,71 +1,212 @@
+//? Implementation of Binary search tree in C
+
 #include <stdio.h>
 #include <stdlib.h>
-typedef struct node
+
+typedef struct treeNode
 {
     int data;
-    struct node *left, *right;
-} Node;
+    struct treeNode *left;
+    struct treeNode *right;
 
-Node *root = NULL;
-Node *search(Node *root, int sdata)
+} treeNode;
+
+treeNode *FindMin(treeNode *node)
 {
-    if (root == NULL)
+    if (node == NULL)
     {
-        printf("\nData not found\n");
-        exit(0);
+        /* There is no element in the tree */
+        return NULL;
     }
-    else if (root->data == sdata)
+    if (node->left) /* Go to the left sub tree to find the min element */
+        return FindMin(node->left);
+    else
+        return node;
+}
+
+treeNode *FindMax(treeNode *node)
+{
+    if (node == NULL)
     {
-        printf("\nData found\n");
-        exit(0);
+        /* There is no element in the tree */
+        return NULL;
+    }
+    if (node->right) /* Go to the left sub tree to find the min element */
+        FindMax(node->right);
+    else
+        return node;
+}
+
+treeNode *create()
+{
+    treeNode *temp;
+    printf("\nEnter data:");
+    temp = (treeNode *)malloc(sizeof(treeNode));
+    scanf("%d", &temp->data);
+    temp->left = temp->right = NULL;
+    return temp;
+}
+
+treeNode *Insert(treeNode *node, int data)
+{
+    if (node == NULL)
+    {
+        treeNode *temp;
+        temp = (treeNode *)malloc(sizeof(treeNode));
+        temp->data = data;
+        temp->left = temp->right = NULL;
+        return temp;
+    }
+
+    if (data > (node->data))
+    {
+        node->right = Insert(node->right, data);
+    }
+    else if (data < (node->data))
+    {
+        node->left = Insert(node->left, data);
+    }
+    /* Else there is nothing to do as the data is already in the tree. */
+    return node;
+}
+
+treeNode *Delete(treeNode *node, int data)
+{
+    treeNode *temp;
+    if (node == NULL)
+    {
+        printf("Element Not Found");
+    }
+    else if (data < node->data)
+    {
+        node->left = Delete(node->left, data);
+    }
+    else if (data > node->data)
+    {
+        node->right = Delete(node->right, data);
     }
     else
     {
-        if (sdata < root->data)
+        /* Now We can delete this node and replace with either minimum element 
+                   in the right sub tree or maximum element in the left subtree */
+        if (node->right && node->left)
         {
-            search(root->left, sdata);
+            /* Here we will replace with minimum element in the right sub tree */
+            temp = FindMin(node->right);
+            node->data = temp->data;
+            /* As we replaced it with some other node, we have to delete that node */
+            node->right = Delete(node->right, temp->data);
         }
         else
         {
-            search(root->right, sdata);
+            /* If there is only one or zero children then we can directly 
+                           remove it from the tree and connect its parent to its child */
+            temp = node;
+            if (node->left == NULL)
+                node = node->right;
+            else if (node->right == NULL)
+                node = node->left;
+            free(temp); /* temp is longer required */
         }
     }
+    return node;
 }
 
-void insert(int idata)
+treeNode *Find(treeNode *node, int data)
 {
-    Node *newnode = (Node *)malloc(sizeof(Node));
-    newnode->data = idata;
-    newnode->left = NULL;
-    newnode->right = NULL;
-
-    if (root == NULL)
+    if (node == NULL)
     {
-        //? tree is empty, assign the new node as the root of the tree.
-        root = newnode;
+        /* Element is not found */
+        return NULL;
+    }
+    if (data > node->data)
+    {
+        /* Search in the right sub tree. */
+        return Find(node->right, data);
+    }
+    else if (data < node->data)
+    {
+        /* Search in the left sub tree. */
+        return Find(node->left, data);
     }
     else
     {
-        Node *current = root;
-        Node *parent = NULL;
-        while (1)
-        {
-            parent = current;
-            if (idata < current->data)
-            {
-                current = current->left;
-                if(current = NULL){
-                    parent->left = newnode;
-                    return;
-                }
-            }
-            else{
-                current=current->right;
-                if(current == NULL){
-                    parent->right = newnode;
-                    return;
-                }
-            }
-        }
+        /* Element Found */
+        return node;
+    }
+}
+
+void PrintInorder(treeNode *node)
+{
+    if (node == NULL)
+    {
+        return;
+    }
+    PrintInorder(node->left);
+    printf("%d ", node->data);
+    PrintInorder(node->right);
+}
+
+void PrintPreorder(treeNode *node)
+{
+    if (node == NULL)
+    {
+        return;
+    }
+    printf("%d ", node->data);
+    PrintPreorder(node->left);
+    PrintPreorder(node->right);
+}
+
+void PrintPostorder(treeNode *node)
+{
+    if (node == NULL)
+    {
+        return;
+    }
+    PrintPostorder(node->left);
+    PrintPostorder(node->right);
+    printf("%d ", node->data);
+}
+
+int main()
+{
+    treeNode *root = NULL;
+    root = Insert(root, 5);
+    root = Insert(root, -1);
+    root = Insert(root, 3);
+    root = Insert(root, -14);
+    root = Insert(root, 8);
+    root = Insert(root, 10);
+    root = Insert(root, 9);
+    root = Insert(root, 6);
+    PrintInorder(root);
+    printf("\n");
+    root = Delete(root, 5);
+    root = Delete(root, -1);
+    PrintInorder(root);
+    printf("\n");
+    treeNode *temp;
+    temp = FindMin(root);
+    printf("Minimum element is %d\n", temp->data);
+    temp = FindMax(root);
+    printf("Maximum element is %d\n", temp->data);
+    temp = Find(root, 8);
+    if (temp == NULL)
+    {
+        printf("Element 8 not found\n");
+    }
+    else
+    {
+        printf("Element 8 Found\n");
+    }
+    temp = Find(root, 2);
+    if (temp == NULL)
+    {
+        printf("Element 2 not found\n");
+    }
+    else
+    {
+        printf("Element 6 Found\n");
     }
 }

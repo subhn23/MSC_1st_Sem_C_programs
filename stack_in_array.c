@@ -23,7 +23,7 @@ int is_full(){
 
 void push(int element){
 	if(is_full()==1)
-	printf("Stack is full. Can\'t insert element\n");
+	printf("Stack is full. Can\'temp insert element\n");
 	else{
 		top++;
 		arr[top]=element;

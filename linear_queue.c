@@ -29,7 +29,7 @@ void insert(int data)
 {
     if (isFull() == 1)
     {
-        printf("Queue is full. Can\'t insert value\n");
+        printf("Queue is full. Can\'temp insert value\n");
     }
     else
     {
